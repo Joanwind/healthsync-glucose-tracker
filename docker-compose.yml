@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: healthsync-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: healthsync
+      POSTGRES_PASSWORD: healthsync123
+      POSTGRES_DB: healthsync
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: healthsync-web
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:

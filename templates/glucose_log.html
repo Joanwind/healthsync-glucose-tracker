@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HealthSync · Glucose</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <main class="page-body">
+    <div class="main-content">
+      <main class="container">
+
+        <!-- Header -->
+        <div class="hs-page-header">
+          <h1 class="hs-title">HealthSync</h1>
+          <p class="hs-subtitle">Glucose Log</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <section class="hs-card hs-stats">
+          <div class="hs-stat">
+            <div class="hs-stat-label">Latest</div>
+            <div class="hs-stat-value">
+              {% if stats and stats.latest is not none %}
+                {{ stats.latest }} <span class="hs-unit">mg/dL</span>
+              {% else %}
+                <span class="hs-muted">—</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="hs-stat">
+            <div class="hs-stat-label">7-day Avg</div>
+            <div class="hs-stat-value">
+              {% if stats and stats.avg7 is not none %}
+                {{ stats.avg7 }} <span class="hs-unit">mg/dL</span>
+              {% else %}
+                <span class="hs-muted">—</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="hs-stat">
+            <div class="hs-stat-label">Range</div>
+            <div class="hs-stat-value">
+              {% if stats and stats.min7 is not none and stats.max7 is not none %}
+                {{ stats.min7 }}–{{ stats.max7 }} <span class="hs-unit">mg/dL</span>
+              {% else %}
+                <span class="hs-muted">—</span>
+              {% endif %}
+            </div>
+          </div>
+        </section>
+
+        <!-- Add Form -->
+        <section class="hs-card hs-form-card">
+          <div class="hs-card-header">
+            <h2 class="hs-card-title">Add a reading</h2>
+            <p class="hs-card-hint">Log your measurement to update the dashboard trend.</p>
+          </div>
+
+          {% if error %}
+            <div class="hs-alert hs-alert-error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              <span>{{ error }}</span>
+            </div>
+          {% endif %}
+
+          <form class="hs-form" method="POST" action="{{ url_for('glucose.glucose_log') }}">
+            <div class="hs-row">
+              <div class="hs-field">
+                <label for="value">Glucose (mg/dL)</label>
+                <input
+                  id="value"
+                  name="value"
+                  type="number"
+                  inputmode="numeric"
+                  min="40"
+                  max="400"
+                  step="1"
+                  placeholder="e.g., 125"
+                  required
+                />
+              </div>
+
+              <div class="hs-field hs-full">
+                <label for="measured_at">Measured at</label>
+                <input
+                  id="measured_at"
+                  name="measured_at"
+                  type="datetime-local"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="hs-field">
+              <label for="note">Note (optional)</label>
+              <input
+                id="note"
+                name="note"
+                type="text"
+                maxlength="120"
+                placeholder="e.g., after lunch / fasting / post-workout"
+              />
+            </div>
+
+            <button class="hs-btn hs-btn-primary" type="submit">
+              <i class="fa-solid fa-plus"></i>
+              Add Reading
+            </button>
+          </form>
+        </section>
+
+        <!-- Recent Logs -->
+        <section class="hs-card">
+          <div class="hs-card-header hs-card-header-row">
+            <h2 class="hs-card-title">Recent readings</h2>
+            <span class="hs-pill">{{ logs|length }} record(s)</span>
+          </div>
+
+          {% if logs and logs|length > 0 %}
+            <div class="hs-table">
+              {% for r in logs %}
+                <div class="hs-table-row">
+                  <div class="hs-table-main">
+                    <div class="hs-reading">
+                      <span class="hs-reading-value">{{ r["value"] }}</span>
+                      <span class="hs-unit">mg/dL</span>
+
+                      {% if r["flag"] == "high" %}
+                        <span class="hs-badge hs-badge-high">HIGH</span>
+                      {% elif r["flag"] == "low" %}
+                        <span class="hs-badge hs-badge-low">LOW</span>
+                      {% else %}
+                        <span class="hs-badge hs-badge-ok">OK</span>
+                      {% endif %}
+                    </div>
+
+                    <div class="hs-meta">
+                      <i class="fa-regular fa-clock"></i>
+                      <span>{{ r["pretty_time"] }}</span>
+                      {% if r["note"] %}
+                        <span class="hs-dot">•</span>
+                        <span class="hs-note">{{ r["note"] }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="hs-table-actions">
+                    <form method="POST" action="{{ url_for('glucose.delete_glucose', gid=r['id']) }}"
+                          onsubmit="return confirm('Delete this glucose record?');">
+                      <button class="hs-icon-btn" type="submit" aria-label="Delete">
+                        <i class="fa-regular fa-trash-can"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="hs-empty">
+              <i class="fa-solid fa-droplet hs-empty-icon"></i>
+              <p class="hs-empty-title">No readings yet</p>
+              <p class="hs-empty-subtitle">Add your first glucose reading to start tracking trends.</p>
+            </div>
+          {% endif %}
+        </section>
+
+        <div class="hs-spacer"></div>
+      </main>
+    </div>
+  </main>
+
+  {% include 'footer.html' %}
+
+  <script>
+    // Set datetime-local default to now (local time)
+    (function () {
+      const el = document.getElementById("measured_at");
+      if (!el) return;
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      const value =
+        now.getFullYear() + "-" +
+        pad(now.getMonth() + 1) + "-" +
+        pad(now.getDate()) + "T" +
+        pad(now.getHours()) + ":" +
+        pad(now.getMinutes());
+      el.value = value;
+    })();
+  </script>
+</body>
+</html>

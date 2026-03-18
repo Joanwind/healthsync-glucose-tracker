@@ -1,0 +1,160 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HealthSync - Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body> 
+<main class="page-body">
+    <div class="main-content">
+    <header class="top-header">
+        <h1 class="logo-title">HealthSync</h1>
+        <p class="sub-title">Daily Review</p>
+    </header>      
+
+  <main class="container">
+    <a class="no-link" href="{{ url_for('glucose.glucose_log') }}">
+      <div class="data-box">
+        <div class="data-text">
+          <strong>Glucose</strong>
+          <p>
+            {% if latest_value %}
+              {{ latest_value }} mg/dL
+            {% else %}
+              —
+            {% endif %}
+          </p>
+        </div>
+        <div class="data-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+      </div>
+    </a>  
+
+   <!-- 7 day trend -->
+    <div class="hs-card">
+      <div class="hs-card-header hs-card-header-row">
+        <h2 class="hs-card-title">7-day Trend</h2>
+        <span class="hs-pill">mg/dL</span>
+      </div>
+      {% if not values or values|length == 0 %}
+        <p class="hs-muted" style="margin:0 0 8px;">No readings in last 7 days.</p>
+      {% endif %}
+      <canvas id="glucoseChart" height="160"></canvas>
+    </div>
+
+   <!-- Export -->    
+    <!-- Collapsible Date Range Export (Accordion style) -->
+    <details class="hs-accordion">
+      <summary class="hs-accordion-summary">
+        <div class="hs-accordion-left">
+          <i class="fa-solid fa-file-arrow-down"></i>
+          <span>Data Range Export</span>
+        </div>
+        <i class="fa-solid fa-chevron-down hs-accordion-chev"></i>
+      </summary>
+
+      <div class="hs-accordion-body">
+        <p class="hs-muted" style="margin: 0 0 10px 0;">
+          Choose a custom date range and download as CSV.
+        </p>
+
+        <form class="range-form" onsubmit="return exportRangeCSV(event)">
+          <div class="range-row">
+            <div class="hs-field">
+              <label for="startDate">Start</label>
+              <input id="startDate" type="date" required>
+            </div>
+
+            <div class="hs-field">
+              <label for="endDate">End</label>
+              <input id="endDate" type="date" required>
+            </div>
+          </div>
+
+          <button class="hs-btn hs-btn-primary" type="submit">
+            <i class="fa-solid fa-download"></i>
+            Download CSV
+          </button>
+
+          <p id="rangeError" style="display:none; margin:10px 0 0; color:#b00020; font-size:12px;">
+            Invalid date range. End date must be later than start date.
+          </p>
+        </form>
+      </div>
+    </details>
+
+    <!--suggestion-->
+    <div class="card suggestion">
+      <strong>Smart Suggestion:</strong>
+      <p>{{ suggestion }}</p>
+    </div> 
+    
+  </main>
+  </div>
+</main>
+  {% include 'footer.html' %}   
+
+  <script>
+    const labels = {{ dates | tojson }};
+    const dataPoints = {{ values | tojson }};
+
+    const ctx = document.getElementById('glucoseChart');
+    if (ctx && dataPoints.length > 0) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+          label: 'Glucose',
+          data: dataPoints,
+          tension: 0.35,
+          fill: false,
+          pointRadius: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            suggestedMin: 60,
+            suggestedMax: 220,
+            ticks: { stepSize: 20 }
+          }
+        }
+      }
+    });
+  }
+</script>
+
+<!--Export-->
+<script>
+  const exportBaseUrl = "{{ url_for('glucose.export_glucose_csv') }}";
+
+  function exportRangeCSV(e){
+    e.preventDefault();
+
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("endDate").value;
+    const err = document.getElementById("rangeError");
+
+    if (!start || !end || end < start){
+      err.style.display = "block";
+      return false;
+    }
+    err.style.display = "none";
+
+    window.location.href = `${exportBaseUrl}?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`;
+    return false;
+  }
+</script>
+</body>
+</html>

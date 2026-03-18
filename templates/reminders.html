@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reminders</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<body>
+<main class="page-body">
+<div class="main-content">
+
+<header class="top-header">
+  <h1 class="logo-title">HealthSync</h1>
+  <p class="sub-title">Reminders</p>
+</header>
+
+<main class="container">
+
+  <!-- ✅ 新增提醒表单 -->
+  <form method="POST" action="{{ url_for('reminders.add_reminder') }}" class="reminder-form">
+    <input type="text" name="med_name" placeholder="Medication name" required>
+    <input type="datetime-local" name="remind_at" required>
+
+    <select name="frequency" required>
+      <option value="once">Once</option>
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+    </select>
+
+    <button type="submit" class="outline-btn">Add Reminder</button>
+</form>
+
+
+ <!-- ✅ Reminders List -->
+<div class="reminder-list">
+
+  <!-- Pending -->
+  <h3 class="reminder-section-title">Pending</h3>
+
+  {% if pending and pending|length > 0 %}
+    {% for r in pending %}
+      <div class="reminder-item-row">
+
+        <!-- toggle -->
+        <form method="POST"
+              action="{{ url_for('reminders.toggle_reminder', rid=r['id']) }}"
+              class="reminder-left">
+          <input type="checkbox"
+                 onchange="this.form.submit()"
+                 {% if r["done"]==1 %}checked{% endif %}>
+          <span>
+            <strong>{{ r["pretty_time"] }}</strong> — {{ r["med_name"] }}
+            <em>({{ r["frequency"] }})</em>
+          </span>
+        </form>
+
+        <!-- right actions -->
+        <div class="reminder-actions">
+          <a class="icon-link" href="{{ url_for('reminders.edit_reminder', rid=r['id']) }}" title="Edit">
+            <i class="fas fa-pen"></i>
+          </a>
+
+          <form method="POST" action="{{ url_for('reminders.delete_reminder', rid=r['id']) }}">
+            <button type="submit" class="icon-btn" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty-hint">No pending reminders.</p>
+  {% endif %}
+
+
+  <!-- Completed -->
+  <h3 class="reminder-section-title" style="margin-top:16px;">Completed</h3>
+
+  {% if completed and completed|length > 0 %}
+    {% for r in completed %}
+      <div class="reminder-item-row reminder-completed">
+
+        <form method="POST"
+              action="{{ url_for('reminders.toggle_reminder', rid=r['id']) }}"
+              class="reminder-left">
+          <input type="checkbox"
+                 onchange="this.form.submit()"
+                 {% if r["done"]==1 %}checked{% endif %}>
+          <span class="reminder-done">
+            <strong>{{ r["pretty_time"] }}</strong> — {{ r["med_name"] }}
+            <em>({{ r["frequency"] }})</em>
+          </span>
+        </form>
+
+        <div class="reminder-actions">
+          <a class="icon-link" href="{{ url_for('reminders.edit_reminder', rid=r['id']) }}" title="Edit">
+            <i class="fas fa-pen"></i>
+          </a>
+
+          <form method="POST" action="{{ url_for('reminders.delete_reminder', rid=r['id']) }}">
+            <button type="submit" class="icon-btn" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="empty-hint">No completed reminders yet.</p>
+  {% endif %}
+
+</div>
+
+</main>
+</div>
+</main>
+
+{% include 'footer.html' %}
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<footer class="bottom-nav">
+
+  <a href="{{ url_for('reminders.reminders') }}">
+    <i class="fas fa-calendar-check"></i>
+  </a>
+
+  <a href="{{ url_for('dashboard.dashboard') }}" >
+    <img src="{{ url_for('static', filename='images/logo_pink_11.png') }}"
+         class="logo-icon"
+         alt="HealthSync Logo">
+  </a>
+
+  <a href="{{ url_for('settings.user_settings') }}">
+    <i class="fas fa-user"></i>
+  </a>
+
+</footer>

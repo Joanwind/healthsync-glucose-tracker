@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Reminder</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body>
+
+<main class="page-body">
+  <div class="main-content">
+    <header class="top-header">
+      <h1 class="logo-title">HealthSync</h1>
+      <p class="sub-title">Edit Reminder</p>
+    </header>
+
+    <main class="container">
+
+      <form method="POST" class="reminder-form">
+        <input type="text" name="med_name" value="{{ reminder['med_name'] }}" required>
+        <input type="datetime-local" name="remind_at" value="{{ reminder['remind_at'] }}" required>
+
+        <select name="frequency" required>
+          <option value="once"  {% if reminder['frequency']=='once' %}selected{% endif %}>Once</option>
+          <option value="daily" {% if reminder['frequency']=='daily' %}selected{% endif %}>Daily</option>
+          <option value="weekly"{% if reminder['frequency']=='weekly'%}selected{% endif %}>Weekly</option>
+        </select>
+
+        <button class="outline-btn" type="submit">Save Changes</button>
+        <a class="text-link" href="{{ url_for('reminders.reminders') }}">Cancel</a>
+      </form>
+
+    </main>
+  </div>
+</main>
+
+</body>
+</html>
