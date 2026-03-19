@@ -9,4 +9,4 @@ python init_db.py
 
 echo "Starting Flask app..."
 
-gunicorn --workers 2 --threads 4 --timeout 120 -b 0.0.0.0:5000 app:app
+gunicorn --workers 2 --threads 4 --timeout 120 -b 0.0.0.0:${PORT:-5000} app:app
