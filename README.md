@@ -56,12 +56,7 @@ This project demonstrates full-stack backend development, database integration, 
 
 
 ##  System Architecture
-Client (Browser)
-↓
-Flask App (Gunicorn)
-↓
-PostgreSQL Database (Render)
-
+Client (Browser) → Flask App (Gunicorn) → PostgreSQL Database (Render)
 
 
 ##  Installation (Local Setup)
