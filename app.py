@@ -24,6 +24,10 @@ app.register_blueprint(glucose_bp)
 app.register_blueprint(reminders_bp)
 app.register_blueprint(settings_bp)
 
+@app.route("/healthz")
+def health_check():
+    return {"status": "ok"}, 200
+
 if __name__ == "__main__":
     app.run(debug=True)
 

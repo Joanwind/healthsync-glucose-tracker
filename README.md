@@ -1,51 +1,183 @@
-# HealthSync
+#  HealthSync – Glucose Tracking Web Application
 
-HealthSync is a lightweight health tracking web application built with Flask.
+A full-stack health tracking web application designed to help users monitor blood glucose levels, manage meals, and track daily health activities.  
 
-## Features
+🔗 **Live Demo**: https://healthsync-glucose-tracker.onrender.com  
 
-- User authentication (login/register)
-- Blood glucose logging
-- Medication reminders
-- CSV data export
-- REST API for glucose data
-- Dashboard with Chart.js visualization
+---
 
-## Tech Stack
+##  Overview
 
-Backend:
+HealthSync is a Flask-based web application that allows users to:
+
+- Register and log in securely  
+- Record and track blood glucose levels  
+- Log meals and health-related notes  
+- Set reminders for medication and activities  
+- Export health data for personal tracking  
+
+This project demonstrates full-stack backend development, database integration, and cloud deployment practices.
+
+---
+
+##  Tech Stack
+
+### Backend
+- Python
 - Flask
-- SQLite
-- SQLAlchemy
+- Gunicorn
 
-Frontend:
-- HTML
-- CSS
-- Chart.js
+### Database
+- PostgreSQL (Production)
+- SQLite (Development)
 
-## Project Structure
+### Frontend
+- HTML5
+- CSS3
+- JavaScript
 
-routes/
-    auth.py
-    dashboard.py
-    glucose.py
-    reminders.py
-    settings.py
+### DevOps & Deployment
+- Docker
+- Render (Cloud deployment)
+- Environment Variables (.env)
 
-templates/
-static/
+---
 
-app.py
-db.py
-utils.py
-requirements.txt
+##  Features
 
-## Run Locally
+- 🔐 User authentication (Register / Login / Logout)
+- 📊 Glucose data logging
+- 🍽 Meal tracking feature
+- ⏰ Medication & reminder feature
+- 📁 CSV-based data export
+- 📈 Dashboard with health data overview
+- ☁️ Cloud deployment with PostgreSQL integration
 
-Install dependencies:
+---
 
+##  System Architecture
+Client (Browser)
+↓
+Flask App (Gunicorn)
+↓
+PostgreSQL Database (Render)
+
+---
+
+##  Installation (Local Setup)
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Joanwind/healthsync-glucose-tracker.git
+cd healthsync-glucose-tracker
+```
+
+### 2. Create virtual environment
+```bash
+python -m venv venv
+source venv/bin/activate   # Mac/Linux
+venv\Scripts\activate      # Windows
+```
+
+### 3. Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
-Run the application:
+### 4. Set environment variables
+Create a .env file:
+DATABASE_URL=your_database_url
+SECRET_KEY=your_secret_key
 
-python app.py
+### 5. Run the app
+```bash
+flask run
+```
+
+---
+
+##  Docker Deployment
+
+### Build image
+```bash
+docker build -t healthsync .
+```
+
+### Run container
+```bash
+docker run -p 10000:10000 healthsync
+```
+
+---
+
+##  Production Deployment
+The application is deployed on Render with:
+
+- Gunicorn as WSGI server
+- PostgreSQL managed database
+- Environment-based configuration
+- Automatic build & deploy from GitHub
+
+---
+
+##  Engineering Highlights
+- Migrated database from SQLite to PostgreSQL for production readiness
+- Implemented environment-based configuration for secure deployment
+- Containerised the application using Docker
+- Integrated cloud database with Flask backend
+- Configured Gunicorn for scalable production serving
+- Debugged real-world deployment issues (port binding, DB authentication, environment variables)
+
+---
+
+##  Health Check Endpoint
+```bash
+GET /healthz
+```
+Returns:
+{"status": "ok"}
+Used for service monitoring and uptime validation.
+
+---
+
+##  Screenshots
+
+### Login & Registration
+
+![Login](images/login.png)
+![Register](images/register.png)
+
+### Dashboard
+
+![Dashboard](images/dashboard.png)
+
+### Glucose Log
+
+![Glucose](images/glucose.png)
+
+### Reminder System
+
+![Reminder](images/reminder.png)
+
+### Settings
+
+![Settings](images/settings.png)
+
+---
+
+##  Future Improvements
+- Add user session management (Flask-Login)
+- Implement REST API structure
+- Add data visualization charts
+- Improve UI with frontend framework (React / Bootstrap)
+- Add automated tests (pytest)
+
+---
+
+## Author
+Joan
+
+---
+
+##  License
+This project is released under the MIT License.
