@@ -4,7 +4,7 @@ A full-stack health tracking web application designed to help users monitor bloo
 
 🔗 **Live Demo**: https://healthsync-glucose-tracker.onrender.com  
 
----
+
 
 ##  Overview
 
@@ -18,7 +18,7 @@ HealthSync is a Flask-based web application that allows users to:
 
 This project demonstrates full-stack backend development, database integration, and cloud deployment practices.
 
----
+
 
 ##  Tech Stack
 
@@ -41,7 +41,7 @@ This project demonstrates full-stack backend development, database integration, 
 - Render (Cloud deployment)
 - Environment Variables (.env)
 
----
+
 
 ##  Features
 
@@ -53,7 +53,7 @@ This project demonstrates full-stack backend development, database integration, 
 - 📈 Dashboard with health data overview
 - ☁️ Cloud deployment with PostgreSQL integration
 
----
+
 
 ##  System Architecture
 Client (Browser)
@@ -62,7 +62,7 @@ Flask App (Gunicorn)
 ↓
 PostgreSQL Database (Render)
 
----
+
 
 ##  Installation (Local Setup)
 
@@ -86,15 +86,17 @@ pip install -r requirements.txt
 
 ### 4. Set environment variables
 Create a .env file:
+```
 DATABASE_URL=your_database_url
 SECRET_KEY=your_secret_key
+```
 
 ### 5. Run the app
 ```bash
 flask run
 ```
 
----
+
 
 ##  Docker Deployment
 
@@ -108,7 +110,7 @@ docker build -t healthsync .
 docker run -p 10000:10000 healthsync
 ```
 
----
+
 
 ##  Production Deployment
 The application is deployed on Render with:
@@ -118,7 +120,7 @@ The application is deployed on Render with:
 - Environment-based configuration
 - Automatic build & deploy from GitHub
 
----
+
 
 ##  Engineering Highlights
 - Migrated database from SQLite to PostgreSQL for production readiness
@@ -128,17 +130,19 @@ The application is deployed on Render with:
 - Configured Gunicorn for scalable production serving
 - Debugged real-world deployment issues (port binding, DB authentication, environment variables)
 
----
+
 
 ##  Health Check Endpoint
 ```bash
 GET /healthz
 ```
 Returns:
+```
 {"status": "ok"}
+```
 Used for service monitoring and uptime validation.
 
----
+
 
 ##  Screenshots
 
@@ -163,7 +167,7 @@ Used for service monitoring and uptime validation.
 
 ![Settings](images/settings.png)
 
----
+
 
 ##  Future Improvements
 - Add user session management (Flask-Login)
@@ -172,12 +176,12 @@ Used for service monitoring and uptime validation.
 - Improve UI with frontend framework (React / Bootstrap)
 - Add automated tests (pytest)
 
----
+
 
 ## Author
 Joan
 
----
+
 
 ##  License
 This project is released under the MIT License.
