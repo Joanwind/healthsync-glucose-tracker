@@ -1,6 +1,6 @@
 #  HealthSync – Glucose Tracking Web Application
 
-A full-stack health tracking web application designed to help users monitor blood glucose levels, manage meals, and track daily health activities.  
+A full-stack web application built with Flask and PostgreSQL for tracking blood glucose levels and managing basic health data.
 
 🔗 **Live Demo**: https://healthsync-glucose-tracker.onrender.com  
 
@@ -12,7 +12,7 @@ HealthSync is a Flask-based web application that allows users to:
 
 - Register and log in securely  
 - Record and track blood glucose levels  
-- Log meals and health-related notes  
+- Manage simple health-related notes  
 - Set reminders for medication and activities  
 - Export health data for personal tracking  
 
@@ -47,10 +47,9 @@ This project demonstrates full-stack backend development, database integration, 
 
 - 🔐 User authentication (Register / Login / Logout)
 - 📊 Glucose data logging
-- 🍽 Meal tracking feature
+- 📈 Dashboard with health data overview
 - ⏰ Medication & reminder feature
 - 📁 CSV-based data export
-- 📈 Dashboard with health data overview
 - ☁️ Cloud deployment with PostgreSQL integration
 
 
@@ -172,11 +171,3 @@ Used for service monitoring and uptime validation.
 - Add automated tests (pytest)
 
 
-
-## Author
-Joan
-
-
-
-##  License
-This project is released under the MIT License.
